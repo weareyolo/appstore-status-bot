@@ -8,11 +8,10 @@ const language = process.env.LANGUAGE;
 const i18n = new I18n();
 
 i18n.configure({
-  locales: ['en','ko', 'ja'],
   directory: path.join(__dirname, '../locales')
 });
 
-i18n.setLocale(language);
+i18n.setLocale('en');
 
 function post(appInfo, submissionStartDate) {
   const status = i18n.__(appInfo.status);
