@@ -1,71 +1,94 @@
-<p align="center"><img src="./.github/images/og.png" width="70%"></p>
+# AppStore Status Bot
 
+<p align="center"><img src="./.github/images/logo.png" alt="logo" width="70%"></p>
 
-![Fetch Appstore Info](https://github.com/techinpark/appstore-status-bot/workflows/Fetch%20Appstore%20Info/badge.svg)
-![stars](https://img.shields.io/github/stars/techinpark/appstore-status-bot?color=yellow&style=social)
-![forks](https://img.shields.io/github/forks/techinpark/appstore-status-bot?style=social)
+[![Get App Store Info](https://github.com/weareyolo/appstore-status-bot/workflows/Get%20App%20Store%20Info/badge.svg)](https://github.com/weareyolo/appstore-status-bot/actions/workflows/commit.yml)
 
-[한국어로 보기](./README-KOREAN.md) 
+[![Auto Commit](https://github.com/weareyolo/appstore-status-bot/workflows/Auto%20commit/badge.svg)](https://github.com/weareyolo/appstore-status-bot/actions/workflows/info.yml)
 
-# Introduce 🤷🏻‍♂️
-App Store Connect status bot is a simple bot script fetches your app info directly from App Store Connect and post changes in slack as a bot using `github-actions`, help of fastlane [Spaceship](https://github.com/fastlane/fastlane/tree/master/spaceship)
-For using this bot, Just `fork` this repository is Super Easy
+## Description
 
+App Store Connect status bot is a simple bot script fetches your app info directly from App Store Connect and post changes
+ in slack as a bot using `github-actions`, help of fastlane
+ [Spaceship](https://github.com/fastlane/fastlane/tree/master/spaceship)
 
-# Features 🍯
-- 🚀  Fetch appstore connect info using apppstore connect API 
-- 📣  Share your application `status` information to your slack workspace 
-- 🌍 `Localization` support  (`english`, `korean`) 
+This repository is based on [the one](https://github.com/techinpark/appstore-status-bot) made by @techinpark
 
-# Preview 🤖
-<img src="./.github/images/preview.png" width="70%">
+## Features
 
+- Fetch App Store Connect info using the API
+- Share applications `status` to slack workspace
+- Auto commit GitHub action to avoid disabling after 60 days of inactivity
 
-# Usage 👨🏻‍💻
+## Preview
 
-## 1. Generating Tokens for API Requests 
-To get your Key ID, copy it from App Store Connect by logging in to [App Store Connect](https://appstoreconnect.apple.com/), then: 
+<img src="./.github/images/preview.png" alt="slack preview" width="70%">
 
-1. Select Users and Access, then select the API Keys tab. 
-2. The key IDs appear in a column under the Active heading. Hover the cursor next to a key ID to display the Copy Key ID link. 
-3. Click Copy Key ID and paste it. 
-4. Click Copy Issuer ID and paste it.
-5. Download the newly created API Key file (.p8)
-  > ⚠️ This file cannot be downloaded again after the page has been refreshed
+## Configuration
 
-6. Generate Slack Webhook token. 
-7. Fork this repository.
+### Generating App Store Connect key
 
-## 3. Setting Secrets with your keys.
+Generate an API Key [here](https://appstoreconnect.apple.com/access/api) and note the `Key ID` as it will used later
+in the configuration of the bot.
 
-- Go to `Settings` - `Secrets` - `Add a new secret`
+> ⚠️ Make sure to download the `.p8` file as only available after the creation of the API key
 
-### Secret Values 
+The `Issuer ID` (identifying the creator of the API Key) is available on the
+[same page](https://appstoreconnect.apple.com/access/api) will also be needed.
 
-> PRIVATE_KEY: Input raw data about your API Key file (.p8)  
-> KEY_ID : Input Appstore connect `key_id`  
-> ISSUER_ID : Input Appstore connect `issuer_id`   
-> BUNDLE_ID : Input your bundle_identifier of application you can input multiple bundle_id with comma   
-> SLACK_WEBHOOK :  Input your slack webhook url   
-> GH_TOKEN: Input your github token, (need `gists` and `repo` scope).   
-> GIST_ID: Input portion from your gist url:
-  - https://gist.github.com/techinpark/**9842e074b8ee46aef76fd0d493bae0ed**
+### Create Slack Webhook
 
+Create a new webhook using [Slack Incoming Webhook](https://slack.com/apps/A0F7XDUAZ-incoming-webhooks?tab=settings) app.
 
-## 4. Configure fetch timing or languages
+After the creation the Webhook URL will be needed for the bot to properly send message into your Slack Workspace.
 
-- [fetch.yml](./.github/workflows/fetch.yml) 
+> `https://hooks.slack.com/services/XXX/YYYY/ZZZ`
 
-In `workflow` file, can change lanauges and fetch schedule default `schedule` is every 10 minutes. 
+### Create a Gist that will be used as storage
 
+This bot uses a Gist to store that previous state of an App and be able to know when it changes.
 
-# References 🙇🏻‍♂️
+Create an empty gist [here](https://gist.github.com) and use the ID of the gist later on in the configuration.
 
-- https://github.com/fastlane/fastlane/tree/master/spaceship
-- https://github.com/erikvillegas/itunes-connect-slack
-- https://github.com/rogerluan/app-store-connect-notifier
+> GitHub does not allow empty Gist. First create a file with some content and remove it afterwards with an update.
 
+### Create a GitHub access token
 
-# Contribution 
-- Feel free to contribution for this project. 
-- Every `PR`, `Issues` is wellcome. 🤩
+This bot needs to have access to GitHub for multiple reasons:
+
+- read/write the Gist previously created
+- auto commit on a branch to avoid inactivity
+
+Create an access token [here](https://github.com/settings/tokens/new) with the `repo` and `gist` scopes.
+
+## GitHub Action Configuration
+
+### Environment values
+
+| Environment variable  | description                                                                                                                                                   |
+|-----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| APP_STORE_PRIVATE_KEY | App Store Connect .p8 file content                                                                                                                            |
+| APP_STORE_KEY_ID      | App Store Connect .p8 Key ID                                                                                                                                  |
+| APP_STORE_ISSUER_ID   | App Store Connect API Key creator ID                                                                                                                          |
+| APP_STORE_BUNDLE_IDS  | List of the iOS Apps Bundle IDs that will be checked. (separated by a comma) Eg: `com.MyApp, com.MyApp2`                                                      |
+| SLACK_WEBHOOK_URL     | URL of the Slack Webhook that will send messages into the workspace                                                                                           |
+| GH_GIST_ID        | ID of the Gist that will be used to store previous App Store Connect data. It is the last part of the URL of the Gist gist.github.com/xxx/{ID}                |
+| GH_TOKEN          | GitHub access token with the `gists` and `repo` scope enabled The owner of the access token also needs to have write/read access to the previously given Gist |
+
+### Auto Commit
+
+`Auto Commit` runs by default once a day.
+
+It pushes an `auto_commit` file containing the current date to a branch named `auto-commit`.
+
+It can be configured by changing the [`commit.yml` file](./.github/workflows/commit.yml).
+
+### Get App Store Info
+
+`Get App Store Info` runs by default every 15 minutes.
+
+It retrieves the gist data, then uses the App Store Connect API to read the current states of every configured app.
+If there is a difference between the gist stored data and the current API data a message will be sent to Slack via
+ the Webhook and the new state stored in the Gist.
+
+It can be configured by changing the [`info.yml` file](./.github/workflows/info.yml).

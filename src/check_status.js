@@ -1,25 +1,29 @@
 const slack = require("./slack.js");
 const exec = require("child_process").exec;
 const dirty = require("dirty");
-const { Octokit, App } = require("octokit");
+const { Octokit } = require("octokit");
 const request = require("request-promise-native");
-const { prependOnceListener } = require("process");
 const fs = require("fs").promises;
-const env = Object.create(process.env);
+
+const gistID = process.env.GH_GIST_ID;
 const octokit = new Octokit({ auth: `token ${process.env.GH_TOKEN}` });
 
 const main = async () => {
   await getGist();
 
   exec(
-    "ruby Sources/fetch_app_status.rb",
-    { env: env },
+    "ruby src/fetch_app_status.rb",
+    { env: Object.create(process.env) },
     function (err, stdout, stderr) {
       if (stdout) {
         var apps = JSON.parse(stdout);
+        console.log("Apps data retrieved:");
         console.log(apps);
+
+        const db = dirty("store.db");
+
         for (let app of apps) {
-          checkVersion(app);
+          checkVersion(db, app);
         }
       } else {
         console.log("There was a problem fetching the status of the app!");
@@ -28,12 +32,15 @@ const main = async () => {
     }
   );
 };
-
-const checkVersion = async (app) => {
+// checkVersion compares the lastest version of a given app
+// to the most recent one stored.
+//
+// If there is a difference between the two versions
+// a slack message will be sent.
+const checkVersion = async (db, app) => {
   var appInfoKey = "appInfo-" + app.appID;
   var submissionStartKey = "submissionStart" + app.appID;
 
-  const db = dirty("store.db");
   db.on("load", async function () {
     var lastAppInfo = db.get(appInfoKey);
     if (!lastAppInfo || lastAppInfo.status != app.status) {
@@ -50,30 +57,27 @@ const checkVersion = async (app) => {
     db.set(appInfoKey, app);
 
     try {
-      const data = await fs.readFile("store.db", "utf-8");
-      await updateGist(data);
+      await updateGist();
     } catch (error) {
       console.log(error);
     }
   });
 };
 
+// getGist retrieves the gist that is used for data storage and copies the content locally
+// into a temporary file store.db
 const getGist = async () => {
   const gist = await octokit.rest.gists
     .get({
-      gist_id: process.env.GIST_ID,
+      gist_id: process.env.GH_GIST_ID,
     })
     .catch((error) => console.error(`[*] Unable to update gist\n${error}`));
   if (!gist) return;
 
-  const filename = Object.keys(gist.data.files)[0];
-  const rawdataURL = gist.data.files[filename].raw_url;
 
-  const options = {
-    url: rawdataURL,
-  };
-
-  const result = await request.get(options);
+  const result = await request.get({
+    url: gist.data.files[Object.keys(gist.data.files)[0]].raw_url,
+  });
   try {
     await fs.writeFile("store.db", result);
     console.log("[*] file saved!");
@@ -82,20 +86,20 @@ const getGist = async () => {
   }
 };
 
-const updateGist = async (content) => {
+// updateGist updates the configured gist content with the new data.
+const updateGist = async () => {
   const gist = await octokit.rest.gists
     .get({
-      gist_id: process.env.GIST_ID,
+      gist_id: gistID,
     })
     .catch((error) => console.error(`[*] Unable to update gist\n${error}`));
   if (!gist) return;
 
-  const filename = Object.keys(gist.data.files)[0];
   await octokit.rest.gists.update({
-    gist_id: process.env.GIST_ID,
+    gist_id: gistID,
     files: {
-      [filename]: {
-        content: content,
+      [Object.keys(gist.data.files)[0]]: {
+        content: await fs.readFile("store.db", "utf-8"),
       },
     },
   });

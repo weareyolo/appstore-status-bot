@@ -9,7 +9,7 @@ GEM
     ast (2.4.2)
     atomos (0.1.3)
     aws-eventstream (1.3.0)
-    aws-partitions (1.883.0)
+    aws-partitions (1.884.0)
     aws-sdk-core (3.191.0)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.651.0)
@@ -33,8 +33,7 @@ GEM
     declarative (0.0.20)
     digest-crc (0.6.5)
       rake (>= 12.0.0, < 14.0.0)
-    domain_name (0.5.20190701)
-      unf (>= 0.0.5, < 1.0.0)
+    domain_name (0.6.20240107)
     dotenv (2.8.1)
     emoji_regex (3.2.3)
     excon (0.109.0)
@@ -123,7 +122,7 @@ GEM
       google-apis-core (>= 0.11.0, < 2.a)
     google-apis-playcustomapp_v1 (0.13.0)
       google-apis-core (>= 0.11.0, < 2.a)
-    google-apis-storage_v1 (0.29.0)
+    google-apis-storage_v1 (0.31.0)
       google-apis-core (>= 0.11.0, < 2.a)
     google-cloud-core (1.6.1)
       google-cloud-env (>= 1.0, < 3.a)
@@ -131,11 +130,11 @@ GEM
     google-cloud-env (1.6.0)
       faraday (>= 0.17.3, < 3.0)
     google-cloud-errors (1.3.1)
-    google-cloud-storage (1.45.0)
+    google-cloud-storage (1.47.0)
       addressable (~> 2.8)
       digest-crc (~> 0.4)
       google-apis-iamcredentials_v1 (~> 0.1)
-      google-apis-storage_v1 (~> 0.29.0)
+      google-apis-storage_v1 (~> 0.31.0)
       google-cloud-core (~> 1.6)
       googleauth (>= 0.16.2, < 2.a)
       mini_mime (~> 1.0)
@@ -152,6 +151,7 @@ GEM
     jmespath (1.6.2)
     json (2.7.1)
     jwt (2.7.1)
+    language_server-protocol (3.17.0.3)
     mini_magick (4.12.0)
     mini_mime (1.1.5)
     multi_json (1.15.0)
@@ -177,14 +177,15 @@ GEM
     retriable (3.1.2)
     rexml (3.2.6)
     rouge (2.0.7)
-    rubocop (1.50.2)
+    rubocop (1.60.2)
       json (~> 2.3)
+      language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
-      parser (>= 3.2.0.0)
+      parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.8, < 3.0)
       rexml (>= 3.2.5, < 4.0)
-      rubocop-ast (>= 1.28.0, < 2.0)
+      rubocop-ast (>= 1.30.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 3.0)
     rubocop-ast (1.30.0)
@@ -210,9 +211,6 @@ GEM
     tty-spinner (0.9.3)
       tty-cursor (~> 0.7)
     uber (0.1.0)
-    unf (0.1.4)
-      unf_ext
-    unf_ext (0.0.9.1)
     unicode-display_width (2.5.0)
     word_wrap (1.0.0)
     xcodeproj (1.24.0)
@@ -228,6 +226,7 @@ GEM
       xcpretty (~> 0.2, >= 0.0.7)
 
 PLATFORMS
+  arm64-darwin-23
   ruby
 
 DEPENDENCIES
@@ -235,7 +234,7 @@ DEPENDENCIES
   rubocop
 
 RUBY VERSION
-   ruby 2.6.4p104
+   ruby 3.3.0p0
 
 BUNDLED WITH
-   2.1.4
+   2.5.5

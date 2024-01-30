@@ -10,11 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Format current date
+        id: format-date
+        run: echo "::set-output name=date::$(date)"
       - uses: "DamianReeves/write-file-action@master"
         with:
-          path: dummy_file
+          path: auto_commit
           write-mode: overwrite
-          contents: Overwritten by Github Actions - ${date}
+          contents: "Overwritten by Github Actions - ${{ steps.format-date.outputs.date }}"
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           branch: "auto-commit"
@@ -23,5 +26,3 @@ jobs:
           commit_options: '--allow-empty'
           add_options: '-A'
           push_options: '--force'
-          
-          
