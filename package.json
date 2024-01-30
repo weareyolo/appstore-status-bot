@@ -1,28 +1,25 @@
 {
   "name": "appstore-status-bot",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "",
-  "main": "Sources/check_status.js",
+  "main": "src/check_status.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/techinpark/appstore-status-bot.git"
+    "url": "git+https://github.com/weareyolo/appstore-status-bot.git"
   },
-  "author": "Fernando",
-  "license": "ISC",
   "bugs": {
-    "url": "https://github.com/techinpark/appstore-status-bot/issues"
+    "url": "https://github.com/weareyolo/appstore-status-bot/issues"
   },
-  "homepage": "https://github.com/techinpark/appstore-status-bot#readme",
+  "homepage": "https://github.com/weareyolo/appstore-status-bot#readme",
   "dependencies": {
-    "@slack/webhook": "^5.0.3",
+    "@slack/webhook": "^7.0.2",
     "child_process": "^1.0.2",
-    "dirty": "^1.1.0",
+    "dirty": "^1.1.3",
     "i18n": "^0.15.1",
-    "moment": "^2.29.2",
-    "octokit": "^2.0.0",
+    "moment": "^2.30.1",
+    "octokit": "^3.1.2",
     "request": "^2.88.2",
     "request-promise-native": "^1.0.9"
   }

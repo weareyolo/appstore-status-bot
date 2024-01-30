@@ -15,7 +15,7 @@ jobs:
         run: echo "::set-output name=date::$(date)"
       - uses: "DamianReeves/write-file-action@master"
         with:
-          path: dummy_file
+          path: auto_commit
           write-mode: overwrite
           contents: "Overwritten by Github Actions - ${{ steps.format-date.outputs.date }}"
       - uses: stefanzweifel/git-auto-commit-action@v4

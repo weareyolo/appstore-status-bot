@@ -16,5 +16,5 @@
   "Invalid binary": "Invalid Binary",
   "Status": "Status",
   "Version": "Version",
-  "Message": "The status of your app *{{appname}}* has been changed to *{{status}}* 🚀"
+  "Message": "The status of your app *{{appName}}* has been changed to *{{status}}* 🚀"
 }

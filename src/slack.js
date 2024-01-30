@@ -3,37 +3,24 @@ const path = require("path");
 const { IncomingWebhook } = require("@slack/webhook");
 const { I18n } = require("i18n");
 
-const webhookURL = process.env.SLACK_WEBHOOK;
-const language = process.env.LANGUAGE;
+const webhookURL = process.env.SLACK_WEBHOOK_URL;
 const i18n = new I18n();
 
 i18n.configure({
-  directory: path.join(__dirname, '../locales')
+  directory: path.join(__dirname, '../locales'),
+  defaultLocale: 'en'
 });
 
-i18n.setLocale('en');
-
+// post uses the Slack Webhook API to send the info update to the
+// configured Slack workspace.
 function post(appInfo, submissionStartDate) {
-  const status = i18n.__(appInfo.status);
-  const message = i18n.__("Message", { appname: appInfo.name, status: status });
-  const attachment = slackAttachment(appInfo, submissionStartDate);
-
-  const params = {
-    attachments: [attachment],
-    as_user: "true",
-  };
-
-  hook(message, attachment);
-}
-
-async function hook(message, attachment) {
-  const webhook = new IncomingWebhook(webhookURL, {});
-  await webhook.send({
-    text: message,
-    attachments: [attachment],
+  new IncomingWebhook(webhookURL, {}).send({
+    text: i18n.__("Message", { appName: appInfo.name, status: i18n.__(appInfo.status) }),
+    attachments: [slackAttachment(appInfo, submissionStartDate)],
   });
 }
 
+// slackAttachment builds the API payload used to send a slack message.
 function slackAttachment(appInfo, submissionStartDate) {
   const attachment = {
     fallback: `The status of your app ${appInfo.name} has been changed to ${appInfo.status}`,
@@ -73,6 +60,7 @@ function slackAttachment(appInfo, submissionStartDate) {
       short: true,
     });
   }
+
   return attachment;
 }
 
