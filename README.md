@@ -2,9 +2,9 @@
 
 <p align="center"><img src="./.github/images/logo.png" alt="logo" width="70%"></p>
 
-[![Get App Store Info](https://github.com/weareyolo/appstore-status-bot/workflows/Get%20App%20Store%20Info/badge.svg)](https://github.com/weareyolo/appstore-status-bot/actions/workflows/commit.yml)
+[![Get App Store Info](https://github.com/weareyolo/appstore-status-bot/workflows/Get%20App%20Store%20Info/badge.svg)](https://github.com/weareyolo/appstore-status-bot/actions/workflows/info.yml)
 
-[![Auto Commit](https://github.com/weareyolo/appstore-status-bot/workflows/Auto%20commit/badge.svg)](https://github.com/weareyolo/appstore-status-bot/actions/workflows/info.yml)
+[![Auto Commit](https://github.com/weareyolo/appstore-status-bot/workflows/Auto%20commit/badge.svg)](https://github.com/weareyolo/appstore-status-bot/actions/workflows/commit.yml)
 
 ## Description
 
